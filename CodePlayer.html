@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>CodePlayer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="jquer-ui/jquery-ui.css" rel="stylesheet">
+    <script src="jquey-ui/jquery-ui.js"></script>
+
+
+    <style>
+
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        #header{
+            height: 60px;
+            background-color: #EEEEEE;
+        }
+
+        #button-container{
+            width: 280px;
+            height: 30px;
+            margin: 0 auto;
+            padding-top: 10px;
+        }
+
+        .buttons{
+            font-size: 18px;
+            float: left;
+            border: 1px solid gray;
+            border-right: none;
+            padding: 5px;
+        }
+
+        #logo{
+            font-size: 26px;
+            float: left;
+            font-weight: bold;
+            position: relative;
+            top: 15px;
+            margin-left: 10px;
+        }
+
+        #html{
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        #output{
+            border-right: 1px solid gray;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        .active{
+            background-color: aliceblue;
+        }
+
+        .highlighted{
+            background-color: gray;
+        }
+
+        .panel{
+            float: left;
+            padding-left: 10px;
+            padding-top: 10px;
+            border-left: none;
+    
+        }
+
+        textarea{
+            border-top: none;
+            resize: none;
+            
+        }
+
+        #outputpanel{
+            
+            border-top: none;
+            border-left: 1px solid gray;
+            width: 49%;
+        }
+
+        .hidden{
+            display: none;
+        }
+
+        #htmlpanel{
+            width: 49%;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+
+    <div id="header">
+
+        <div id="logo">CodePlayer</div>
+        <div id="button-container">
+            <div class="buttons active" id="html">HTML</div>
+            <div class="buttons" id="css">CSS</div>
+            <div class="buttons" id="javascript">JavaScript</div>
+            <div class="buttons active" id="output">Output</div>
+
+        </div>
+    </div>
+    
+    <div id="body-container">
+
+        <textarea id="htmlpanel" class="panel"><p>Hello World!</p></textarea>
+        <textarea id="csspanel" class="panel hidden">//CSS</textarea>
+        <textarea id="javascriptpanel" class="panel hidden">/*JavaScript*/</textarea>
+        <iframe class="panel" id="outputpanel"></iframe>
+
+    </div>
+
+    <script>
+
+        function update(){
+            $("iframe").contents().find("html").html("<html><head><style type='text/css'>"+$("#csspanel").val()+"</style></head><body>"+$("#htmlpanel").val()+"</body></html>");
+            
+            document.getElementById("outputpanel").contentWindow.eval($("#javascriptpanel").val());
+        }
+
+        $(".buttons").hover(function(){
+            $(this).addClass("highlighted");
+        },function(){
+            $(this).removeClass("highlighted");
+        });
+
+        $(".buttons").click(function(){
+            $(this).toggleClass("active");
+            $(this).removeClass("highlighted");
+
+            var t =$(this).attr("id")+"panel";
+            $("#"+t).toggleClass("hidden");
+
+            var activeClass=4-$(".hidden").length;
+            $(".panel").width($(window).width()/activeClass-15);
+        });
+
+
+        $(".panel").height(($(window).height()-$("#header").height()));
+
+        update();
+
+        $("textarea").on('change keyup paste', function(){
+            update();
+        });
+
+    </script>
+
+</body>
+</html>
